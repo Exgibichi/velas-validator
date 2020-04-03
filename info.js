@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const { candidate } = require("./config");
 const { contracts } = require("./constants");
 
 const Web3 = require("web3");
@@ -83,65 +82,8 @@ console.log("info for: ", web3.currentProvider.host);
     .areStakeAndWithdrawAllowed()
     .call();
   console.log("stake allowed:", stakeAllowed);
-  console.log("****************** Staker INFO: *******************");
-  console.log("Is pool active: ",
-    await contracts[StakingAuRa].methods.isPoolActive(candidate.staking).call());
-  console.log("Staker pools length: ",
-      await contracts[StakingAuRa].methods.getStakerPoolsLength(candidate.staking)
-          .call());
-  console.log("Pool delegators: ",
-      await contracts[StakingAuRa].methods.poolDelegators(candidate.staking).call());
-  console.log(("Inactive pool delegators: ",
-  await contracts[StakingAuRa].methods.poolDelegatorsInactive(candidate.staking).call()));
-  console.log(
-    "Stake:",
-    await contracts["StakingAuRa"].methods
-      .stakeAmount(candidate.staking, candidate.staking)
-      .call()
-  );
-  console.log("Stake amount by current epoch: ",
-  await contracts[StakingAuRa].methods.stakeAmountByCurrentEpoch(candidate.staking, candidate.staking).call());
-  console.log(
-    "Withdrawable:",
-    await contracts["StakingAuRa"].methods
-      .maxWithdrawAllowed(candidate.staking, candidate.staking)
-      .call()
-  );
-  console.log(
-    "Order withdrawable:",
-    await contracts["StakingAuRa"].methods
-      .maxWithdrawOrderAllowed(candidate.staking, candidate.staking)
-      .call()
-  );
-  console.log(
-    "Staking balance:",
-    web3.utils.fromWei(await web3.eth.getBalance(candidate.staking))
-  );
-  console.log(
-    "Signer balance:",
-    web3.utils.fromWei(await web3.eth.getBalance(candidate.mining))
-  );
-  console.log("Banned: ", await contracts[ValidatorSetAuRa].methods.isValidatorBanned(candidate.mining).call());
-  console.log("Validator or pending: ", await contracts[ValidatorSetAuRa].methods.isValidatorOrPending(candidate.mining).call());
-  console.log("Can report malicious: ",
-      await contracts[ValidatorSetAuRa].methods.isReportValidatorValid(candidate.mining).call());
-  const epochs = await contracts["BlockRewardAuRa"].methods
-    .epochsToClaimRewardFrom(candidate.staking, candidate.staking)
-    .call();
-  console.log("Avail claim epochs:", epochs);
-  const reward = await contracts["StakingAuRa"].methods
-    .getRewardAmount(epochs, candidate.staking, candidate.staking)
-    .call();
-  console.log("Avail reward:", web3.utils.fromWei(reward));
-  console.log("Reward coefficient: ",
-      await contracts[BlockRewardAuRa].methods.validatorRewardPercent(candidate.staking).call());
-  console.log("Epochs pool got reward for: ",
-      await contracts[BlockRewardAuRa].methods.epochsPoolGotRewardFor(candidate.mining).call());
-  console.log("Delegators are currently banned: ",
-      await contracts[ValidatorSetAuRa].methods.areDelegatorsBanned(candidate.mining).call());
-
 };
 
-info(candidate, contracts);
+info(contracts);
 
 module.exports = { info };

@@ -1,5 +1,5 @@
 {
-  "name": "validator",
+  "name": "velasmon",
   "version": "1.0.0",
   "description": "",
   "main": "signAndSendTx.js",
@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "info": "./info.js"
+    "velasmon": "./info.js"
   },
   "keywords": [],
   "author": "",
