@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 
-const { contracts } = require("./constants");
+const abis = {};
+abis["StakingAuRa"] = require("./contracts/StakingAuRa.json").abi;
+abis["ValidatorSetAuRa"] = require("./contracts/ValidatorSetAuRa.json").abi;
+abis["BlockRewardAuRa"] = require("./contracts/BlockRewardAuRa.json").abi;
+abis["TxPermission"] = require("./contracts/TxPermission.json").abi;
+
+const addresses = {};
+addresses["StakingAuRa"] = "0x1100000000000000000000000000000000000001";
+addresses["ValidatorSetAuRa"] = "0x1000000000000000000000000000000000000001";
+addresses["BlockRewardAuRa"] = "0x2000000000000000000000000000000000000001";
+addresses["TxPermission"] = "0x4000000000000000000000000000000000000001";
 
 const Web3 = require("web3");
 
@@ -16,9 +26,28 @@ const info = async () => {
  if (arg === 'testnet' ) {
   web3 = new Web3(new Web3.providers.HttpProvider('https://testnet-v2.velas.com/rpc'));
   }
- }
+ };
 
-console.log("info for: ", web3.currentProvider.host);
+  const contracts = {};
+  contracts["StakingAuRa"] = new web3.eth.Contract(
+      abis["StakingAuRa"],
+      addresses["StakingAuRa"]
+  );
+  contracts["ValidatorSetAuRa"] = new web3.eth.Contract(
+      abis["ValidatorSetAuRa"],
+      addresses["ValidatorSetAuRa"]
+  );
+  contracts["BlockRewardAuRa"] = new web3.eth.Contract(
+      abis["BlockRewardAuRa"],
+      addresses["BlockRewardAuRa"]
+  );
+  contracts["TxPermission"] = new web3.eth.Contract(
+      abis["TxPermission"],
+      addresses["TxPermission"]
+  );
+
+
+  console.log("info for: ", web3.currentProvider.host);
   console.log(
     "Epoch end block:",
     await contracts["StakingAuRa"].methods.stakingEpochEndBlock().call()
@@ -46,8 +75,8 @@ console.log("info for: ", web3.currentProvider.host);
   for (const val of vals) {
     valsWithBalance[val] = web3.utils.fromWei(await web3.eth.getBalance(val));
   }
-  // console.log("Block gas limit: ",
-  //     await contracts["TxPermission"].methods.blockGasLimit().call());
+  console.log("Block gas limit: ",
+      await contracts["TxPermission"].methods.blockGasLimit().call());
   console.log("Pools:", poolsWithBalance);
   console.log("Inactive pools:", ipoolsWithBalance);
   console.log(
@@ -84,6 +113,4 @@ console.log("info for: ", web3.currentProvider.host);
   console.log("stake allowed:", stakeAllowed);
 };
 
-info(contracts);
-
-module.exports = { info };
+info();

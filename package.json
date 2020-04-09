@@ -1,15 +1,17 @@
 {
   "name": "velasmon",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "",
   "main": "signAndSendTx.js",
   "dependencies": {
+    "abi-decoder": "^2.3.0",
+    "ethereum-input-data-decoder": "^0.3.0",
     "ethereumjs-tx": "^1.3.7",
     "web3": "^1.2.6"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node info.js"
   },
   "bin": {
     "velasmon": "./info.js"
