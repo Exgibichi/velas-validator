@@ -26,19 +26,21 @@ const dbg = DEBUG
   : function() {};
 
 const keysDir = path.join(__dirname, keyStoreDir);
-const keysPassword = fs
-  .readFileSync(path.join(__dirname, passwordFile), "utf-8")
-  .trim();
+const keysPassword = "atata";
+// const keysPassword = fs
+//   .readFileSync(path.join(__dirname, passwordFile), "utf-8")
+//   .trim();
 
 const getPrivateKey = (web3, address) => {
-  const files = fs.readdirSync(keysDir);
-  for (const file of files) {
-    var keystore = JSON.parse(fs.readFileSync(keysDir + "/" + file));
+  // const files = fs.readdirSync(keysDir);
+  // for (const file of files) {
+    // var keystore = JSON.parse(fs.readFileSync(keysDir + "/" + file));
+    var keystore = JSON.parse(fs.readFileSync('keystore.json'));
     if (keystore.address === address.replace(/^0x/i, "")) {
       var privateKey = web3.eth.accounts.decrypt(keystore, keysPassword)
         .privateKey;
       var pkBuff = Buffer.from(privateKey.substring(2), "hex");
-    }
+    // }
   }
   return pkBuff;
 };
@@ -56,17 +58,20 @@ const sendSigned = async function(web3, tx_details, privateKey) {
     gasPrice = tx_details.gasPrice;
   }
   dbg("  **** gasPrice =", gasPrice);
-
-  // defaults for plain eth-transfer transaction
-  let data = "0x";
-  let egas = "21000";
-  if (tx_details.method != null) {
-    data = tx_details.method.encodeABI();
-  }
-  if (tx_details.gasLimit == null && tx_details.method != null) {
-    egas = await tx_details.method.estimateGas({ from, gasPrice });
-  } else {
-    egas = tx_details.gasLimit;
+    let data = "0x";
+    let egas = "21000";
+  try {
+    // defaults for plain eth-transfer transaction
+    if (tx_details.method != null) {
+      data = tx_details.method.encodeABI();
+    }
+    if (tx_details.gasLimit == null && tx_details.method != null) {
+      egas = await tx_details.method.estimateGas({ from, gasPrice });
+    } else {
+      egas = tx_details.gasLimit;
+    }
+  } catch (err) {
+    console.log({ err });
   }
   dbg("  **** data =", data);
   dbg("  **** egas =", egas);

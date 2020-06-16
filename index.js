@@ -55,6 +55,36 @@ const emitChange = async () => {
   }
 };
 
+const stake = async () => {
+  try {
+    const minCandidateStake = await contracts["StakingAuRa"].methods
+      .candidateMinStake()
+      .call();
+
+    console.log({ minCandidateStake });
+
+    const tx = await sendSigned(
+      web3,
+      {
+        from: candidate.staking,
+        to: addresses["StakingAuRa"],
+        value: minCandidateStake,
+        method: contracts["StakingAuRa"].methods.stake(
+          candidate.staking,
+          minCandidateStake
+        ),
+        gas: web3.utils.toHex(1600000),
+        gasPrice: web3.utils.toHex(1000000)
+      },
+      null
+    );
+
+    console.log({ tx });
+  } catch (err) {
+    console.log({ err });
+  }
+};
+
 const claimReward = async () => {
   try {
     const epochs = await contracts["BlockRewardAuRa"].methods
@@ -81,8 +111,6 @@ const claimReward = async () => {
     console.log({ err });
   }
 };
-
-
 
 const withdraw = async () => {
   try {
@@ -118,21 +146,21 @@ const orderWithdraw = async () => {
       .candidateMinStake()
       .call();
     console.log({ minCandidateStake });
-    const tx = await sendSigned(
-      web3,
-      {
-        from: candidate.staking,
-        to: addresses["StakingAuRa"],
-        method: contracts["StakingAuRa"].methods.orderWithdraw(
-          candidate.staking,
-          minCandidateStake
-        ),
-        gas: web3.utils.toHex(1600000),
-        gasLimit: web3.utils.toHex(1000000),
-        gasPrice: web3.utils.toHex(1000000)
-      },
-      null
-    );
+    // const tx = await sendSigned(
+    //   web3,
+    //   {
+    //     from: candidate.staking,
+    //     to: addresses["StakingAuRa"],
+    //     method: contracts["StakingAuRa"].methods.orderWithdraw(
+    //       candidate.staking,
+    //       minCandidateStake
+    //     ),
+    //     gas: web3.utils.toHex(1600000),
+    //     gasLimit: web3.utils.toHex(1000000),
+    //     gasPrice: web3.utils.toHex(1000000)
+    //   },
+    //   null
+    // );
 
     console.log({ tx });
   } catch (err) {
@@ -162,7 +190,27 @@ const claimOrderedWithdraw = async () => {
     console.log({ err });
   }
 };
+ 
+const send = async () => {
+  try {
+    const tx = await sendSigned(
+      web3,
+      {
+        from: "0x6882585ef0b67f0acb441a9bde1d8581f35c0c5b",
+        to: "0xe3fb71ad638772c9875caa601456652f56bdefe0",
+        value: web3.utils.toHex(web3.utils.toWei("100")),
+        gas: web3.utils.toHex(21000),
+        gasLimit: web3.utils.toHex(21000),
+        gasPrice: web3.utils.toHex(21000),
+      },
+      null
+    );
 
+    console.log({ tx });
+  } catch (err) {
+    console.log({ err });
+  }
+};
 
 // чтобы стасть валидатором посылаем 1кк в стейк
 // sendStake();
@@ -178,4 +226,6 @@ const claimOrderedWithdraw = async () => {
 // когда исчезнет из валидаторов
 // claimOrderedWithdraw();
 // для получения инфо из бч
-// info(web3, candidate, contracts);
+info();
+// stake();
+// send();

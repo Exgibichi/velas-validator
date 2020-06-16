@@ -24,9 +24,12 @@ const getPoolReward = async (pools) => {
 };
 
 const rewardInfo = async () => {
-  const pools = await contracts["StakingAuRa"].methods.getPools().call();
-  const info = await getPoolReward(pools);
-  console.log({ p: info[1] });
+    // const epochs = await contracts["BlockRewardAuRa"]
+      console.log(await contracts["BlockRewardAuRa"].methods.NATIVE_COIN_INFLATION_RATE().call());
+//   const pools = await contracts["StakingAuRa"].methods.getPools().call();
+//   const info = await getPoolReward(pools);
+//   console.log(info);
+
 };
 
 rewardInfo();
